@@ -6,6 +6,7 @@ public class EnemyVision : MonoBehaviour
 {
     public Vector2 range = new Vector2(1, 1);
     private EnemyAI AI;
+	AudioSource audio;
 
     // Use this for initialization
     void Awake()
@@ -13,6 +14,7 @@ public class EnemyVision : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x * range.x, transform.localScale.y * range.y,
             transform.localScale.z);
         AI = transform.parent.GetComponent<EnemyAI>();
+		audio = GetComponent<AudioSource> ();
     }
 
     // Update is called once per frame
@@ -26,6 +28,7 @@ public class EnemyVision : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             AI.setPlayerInVision(true);
+            audio.Play();
         }
     }
 
@@ -34,6 +37,7 @@ public class EnemyVision : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             AI.setPlayerInVision(false);
+			audio.Stop ();
         }
     }
 }

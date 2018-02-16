@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Lamp : MonoBehaviour {
-    bool used = false;
-    bool attached = false;
+    private bool used = false;
+    private bool attached = false;
 
     public float lampRadius;
     private SpriteRenderer render;
-    LineRenderer lineRender;
-    GameObject player;
+    private LineRenderer lineRender;
+    private GameObject player;
+    public float springConstant = 2000;
+
+    public float getLampRadius()
+    {
+        return lampRadius * transform.localScale.x;
+    }
 
     public bool getUsed()
     {

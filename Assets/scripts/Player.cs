@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
     private const float JUMP_VELOCITY = 9.0f;
     private const float ACCELERATION = 100;
     private Rigidbody2D body;
+	AudioSource audio;
 
    private  bool isJumping = false;
 
@@ -30,6 +31,7 @@ public class Player : MonoBehaviour {
 	    
 	    GameObject startPlatform = GameObject.FindGameObjectWithTag("StartPlatform");
 	    transform.position = startPlatform.transform.position + new Vector3(0,startPlatform.transform.localScale.y/2+.1f,0);
+		audio = GetComponent<AudioSource> ();
 	}
 
     public void reset()
@@ -105,7 +107,7 @@ public class Player : MonoBehaviour {
         {
             if(!isJumping)
                 body.velocity = new Vector3(body.velocity.x, JUMP_VELOCITY, 0);
-
+			audio.Play ();
             isJumping = true;
         }
 	}

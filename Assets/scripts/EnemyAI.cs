@@ -189,11 +189,11 @@ public class EnemyAI : MonoBehaviour
 
         if (!playerInVision)
         {
-             body.velocity = new Vector3(speed, 0, 0);
+             body.velocity = new Vector3(speed, body.velocity.y, 0);
         }
         else
         {
-            body.velocity = new Vector3(chargeSpeed, 0, 0);
+            body.velocity = new Vector3(chargeSpeed, body.velocity.y, 0);
             inAnimation = true;
         }
 
@@ -208,7 +208,6 @@ public class EnemyAI : MonoBehaviour
 
         if (inAnimation)
         {
-            Debug.Log(animationProgress);
             animationTime += Time.deltaTime;
             
             if (animationTime >= chargeAnimationDurations[animationProgress])
@@ -220,7 +219,7 @@ public class EnemyAI : MonoBehaviour
             if (animationProgress == 0)
             {
                 //reverse the changes previously made to the position
-                body.velocity = new Vector3(0,0,0);
+                body.velocity = new Vector3(0,body.velocity.y, 0);
                 agro = true;
             }
             else if (animationProgress == 1)
@@ -230,7 +229,7 @@ public class EnemyAI : MonoBehaviour
             else if (animationProgress == 2)
             {
                 //let the animation cooldown
-                body.velocity = new Vector3(0,0,0);
+                body.velocity = new Vector3(0,body.velocity.y, 0);
                 agro = false;
             }
             else

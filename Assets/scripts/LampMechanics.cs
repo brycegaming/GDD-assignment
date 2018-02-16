@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LampMechanics : MonoBehaviour {
     GameObject player;
-    float springConstant = 2000.0f;
     bool attached = false;
 
     GameObject selectedLamp;
@@ -26,6 +25,7 @@ public class LampMechanics : MonoBehaviour {
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
         body = GetComponent<Rigidbody2D>();
+
 	}
 	
 	// Update is called once per frame
@@ -40,13 +40,14 @@ public class LampMechanics : MonoBehaviour {
             {
                 if (hit.collider.gameObject.tag == "Lamp")
                 {
-                    //if they click on a lamp, this is where they throw a rope around it and use it like a bungee cord
+                    
+					//if they click on a lamp, this is where they throw a rope around it and use it like a bungee cord
                     Vector3 relativeLoc = hit.collider.gameObject.transform.position - player.transform.position;
                     float dist = Mathf.Sqrt((relativeLoc.x * relativeLoc.x) + (relativeLoc.y * relativeLoc.y) + 0);
 
                     selectedLamp = hit.collider.gameObject;
 
-                    if (dist <= selectedLamp.GetComponent<Lamp>().lampRadius && !selectedLamp.GetComponent<Lamp>().getUsed())
+                    if (dist <= selectedLamp.GetComponent<Lamp>().getLampRadius() && !selectedLamp.GetComponent<Lamp>().getUsed())
                     {
                         selectedLamp.GetComponent<Lamp>().use();
 
@@ -70,7 +71,7 @@ public class LampMechanics : MonoBehaviour {
 
             //apply f = -kx (x-dir)
             Vector3 springForce = new Vector3(0, 0, 0);
-            springForce = relativeLoc * springConstant;
+            springForce = relativeLoc * selectedLamp.GetComponent<Lamp>().springConstant;
 
             body.AddForce(springForce * Time.deltaTime);
         }
