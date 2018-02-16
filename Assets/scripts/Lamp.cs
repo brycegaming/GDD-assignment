@@ -13,7 +13,7 @@ public class Lamp : MonoBehaviour {
 
     public bool getUsed()
     {
-        return used;
+         return used;
     }
 
     public void use()
@@ -40,6 +40,7 @@ public class Lamp : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        Debug.Log("here:");
         if(collider.gameObject.tag == "Player")
             render.color = Color.green;
     }

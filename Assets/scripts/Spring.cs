@@ -36,7 +36,7 @@ public class Spring : MonoBehaviour {
      * */
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Player")
+        if (collider.gameObject.tag =="Player")
         {
             //add force in the direction
             playerRigid.AddForce(direction * springStrength);
