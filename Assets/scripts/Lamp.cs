@@ -46,7 +46,6 @@ public class Lamp : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("here:");
         if(collider.gameObject.tag == "Player")
             render.color = Color.green;
     }

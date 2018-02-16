@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class LampMechanics : MonoBehaviour {
-    GameObject player;
-    bool attached = false;
+    private GameObject player;
+    private bool attached = false;
 
-    GameObject selectedLamp;
-    Rigidbody2D body;
+    private  GameObject selectedLamp;
+    private Rigidbody2D body;
 
     public void reset()
     {
@@ -34,18 +35,29 @@ public class LampMechanics : MonoBehaviour {
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2D, Vector2.zero);
 
-            if (hit.collider != null)
+            int lampIndex = 0;
+
+            for (int i = 0; i < hits.Length; i++)
             {
-                if (hit.collider.gameObject.tag == "Lamp")
+                if (hits[i].collider.gameObject.tag == "Lamp")
+                {
+                    lampIndex = i;
+                    break;
+                }
+            }
+            
+            if (hits.Length > 0 && hits[lampIndex] != null)
+            {
+                if (hits[lampIndex].collider.gameObject.tag == "Lamp")
                 {
                     
 					//if they click on a lamp, this is where they throw a rope around it and use it like a bungee cord
-                    Vector3 relativeLoc = hit.collider.gameObject.transform.position - player.transform.position;
+                    Vector3 relativeLoc = hits[lampIndex].collider.gameObject.transform.position - player.transform.position;
                     float dist = Mathf.Sqrt((relativeLoc.x * relativeLoc.x) + (relativeLoc.y * relativeLoc.y) + 0);
 
-                    selectedLamp = hit.collider.gameObject;
+                    selectedLamp = hits[lampIndex].collider.gameObject;
 
                     if (dist <= selectedLamp.GetComponent<Lamp>().getLampRadius() && !selectedLamp.GetComponent<Lamp>().getUsed())
                     {
