@@ -60,7 +60,7 @@ public class Player : MonoBehaviour {
             reset();
         }
 
-        if(collision.gameObject.tag == "Platform" || collision.gameObject.tag == "StartPlatform" || collision.gameObject.tag == "EndPlatform" || collision.gameObject.tag == "Enemy")
+        if(collision.gameObject.tag == "Platform" || collision.gameObject.tag == "StartPlatform" || collision.gameObject.tag == "EndPlatform" )
             isJumping = false;
     }
 
