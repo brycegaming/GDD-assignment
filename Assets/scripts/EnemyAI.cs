@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 abstract class AnimationAction
@@ -49,11 +47,19 @@ class MovementAnimation
 
 public class EnemyAI : MonoBehaviour
 {
-    private Color agroColor = new Color(1.0f, 0.0f, 0.0f);
-    private Color calmColor = new Color(0.0f, 1f, 0.0f);
+    public Sprite agroLeft;
+    public Sprite agroRight;
 
-    public Sprite faceLeft;
-    public Sprite faceRight;
+    public Sprite idleLeft;
+    public Sprite idleRight;
+
+    /**
+     * pointers to the left and right faces
+     * to make it easier to switch between them
+     */
+    private Sprite faceLeft;
+    private Sprite faceRight;
+    
     private SpriteRenderer spriteRender;
     private PolygonCollider2D vision;
     private Rigidbody2D body;
@@ -79,6 +85,18 @@ public class EnemyAI : MonoBehaviour
 
     private Rigidbody2D playerRigidBody;
     private Player playerScript;
+    
+    public float springVelocity = 40;
+
+    public bool getTurnedRight()
+    {
+        if (spriteRender.sprite == faceLeft)
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     private void turnRight()
     {
@@ -104,7 +122,7 @@ public class EnemyAI : MonoBehaviour
 
     public void turn()
     {
-        if (spriteRender.sprite == faceLeft)
+        if (spriteRender.sprite == agroLeft || spriteRender.sprite == idleLeft)
         {
             spriteRender.sprite = faceRight;
             vision.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
@@ -159,6 +177,13 @@ public class EnemyAI : MonoBehaviour
         spriteRender.sprite = faceRight;
     }
 
+    private void hitEnemy()
+    {
+        signalCalm();
+        animationProgress = chargeAnimationDurations.Length - 1;
+        animationTime = 0;
+    }
+
     private void Awake()
     {
         spriteRender = GetComponent<SpriteRenderer>();
@@ -168,6 +193,9 @@ public class EnemyAI : MonoBehaviour
         playerRigidBody = Camera.main.transform.parent.GetComponent<Rigidbody2D>();
         playerScript = Camera.main.transform.parent.GetComponent<Player>();
         body = GetComponent<Rigidbody2D>();
+
+        faceLeft = idleLeft;
+        faceRight = idleRight;
     }
 
     public float getEnemySpeed()
@@ -197,13 +225,28 @@ public class EnemyAI : MonoBehaviour
             inAnimation = true;
         }
 
+        bool turnedRight = getTurnedRight();
+        
         if (agro)
         {
-            spriteRender.color = agroColor;
+            //spriteRender.color = agroColor;
+            faceLeft = agroLeft;
+            faceRight = agroRight;
         }
         else
         {
-            spriteRender.color = calmColor;
+            //spriteRender.color = calmColor;
+            faceLeft = idleLeft;
+            faceRight = idleRight;
+        }
+
+        if (turnedRight)
+        {
+            spriteRender.sprite = faceRight;
+        }
+        else
+        {
+            spriteRender.sprite = faceLeft;
         }
 
         if (inAnimation)
@@ -247,7 +290,10 @@ public class EnemyAI : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             playerRigidBody.velocity = new Vector3(getEnemySpeed()*1.5f,  getEnemySpeed() * .1f, 0);
-            //signalCalm();
+        }
+        else if (other.gameObject.tag == "Enemy")
+        {
+            hitEnemy();
         }
     }
 }

@@ -12,6 +12,9 @@ public class Lamp : MonoBehaviour {
     private GameObject player;
     public float springConstant = 2000;
 
+    public Sprite lampOn;
+    public Sprite lampOff;
+
     public float getLampRadius()
     {
         return lampRadius * transform.localScale.x;
@@ -41,32 +44,32 @@ public class Lamp : MonoBehaviour {
         this.used = false;
         transform.Find("bounding box").GetComponent<LampRange>().reset();
 
-        render.color = Color.red;
+        render.sprite = lampOff;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(collider.gameObject.tag == "Player")
-            render.color = Color.green;
+        if (collider.gameObject.tag == "Player")
+            render.sprite = lampOn;
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
         if (!used)
         {
-            render.color = Color.red;
+            render.sprite = lampOff;
         }
     }
 
     // Use this for initialization
     void Start () {
-        BoxCollider2D coll = GetComponent<BoxCollider2D>();
-        coll.size = new Vector3(lampRadius * 2, lampRadius * 2, 0);
+        CircleCollider2D coll = GetComponent<CircleCollider2D>();
+        coll.radius = lampRadius;
 
         lineRender = GetComponent<LineRenderer>();
 
         render = GetComponent<SpriteRenderer>();
-        render.color = Color.red;
+        render.sprite = lampOff;
 
         player = GameObject.FindGameObjectWithTag("Player");
     }
